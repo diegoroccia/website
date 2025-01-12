@@ -162,8 +162,15 @@ a.secondary {
 }
 
 @media (prefers-color-scheme: dark) {
+  .logoContainer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
   .logo {
-    filter: invert();
+    object-fit: contain;
   }
 }
 
