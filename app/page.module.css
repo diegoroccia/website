@@ -166,3 +166,10 @@ a.secondary {
     filter: invert();
   }
 }
+
+.icon {
+  width: 1em; /* This makes the icon match the current font size */
+  height: 1em;
+  vertical-align: middle;
+  margin-right: 0.5em;
+}
