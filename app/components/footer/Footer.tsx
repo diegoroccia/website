@@ -6,7 +6,7 @@ library.add(fab);
 
 export default function Footer() {
   return (
-    <footer className="flex-auto w-full text-slate-600 absolute bottom-0 pb-4 pr-4">
+    <footer className="flex-auto w-full text-slate-600 absolute bottom-4 pb-4 pr-4">
       <div className="flex justify-end space-x-2">
         <a
           href="https://github.com/diegoroccia"
