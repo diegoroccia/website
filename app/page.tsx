@@ -12,7 +12,7 @@ export default function Home() {
         </div>
         <h1 className="text-3xl font-bold">Diego Roccia</h1>
         <Button variant="link">Enter</Button>
-          <Footer />
+        <Footer />
       </main>
     </div>
   );
