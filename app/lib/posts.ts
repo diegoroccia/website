@@ -3,7 +3,7 @@ import matter from "gray-matter";
 
 export async function getAllBlogPosts() {
   // getting all .md files from the posts directory
-  const blogPosts = glob.sync(`posts/**/*.md`);
+  const blogPosts = glob.sync(`posts/*.md`);
 
   const blogData = await Promise.all(
     blogPosts.map(async (file) => {
