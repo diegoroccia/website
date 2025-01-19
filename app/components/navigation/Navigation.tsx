@@ -8,11 +8,11 @@ import {
 import Link from "next/link";
 
 const menuItems = [
-  { label: "About me", link: "/blog" },
+  { label: "Home", link: "/" },
+  { label: "Blog", link: "/blog" },
   { label: "Tech", link: "/tech" },
-  { label: "Blog", link: "/blog" },
-  { label: "Games", link: "/blog" },
-  { label: "Blog", link: "/blog" },
+  { label: "Games", link: "#" },
+  { label: "Blog", link: "#" },
 ];
 
 export default function Navigation() {

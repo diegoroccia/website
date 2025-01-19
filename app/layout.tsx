@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Footer from "./components/footer/Footer";
+import Navigation from "./components/navigation/Navigation";
 
 export const metadata: Metadata = {
   title: "Diego Roccia",
@@ -13,7 +15,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <div className="min-h-[100dvh] flex flex-col">
+          <Navigation />
+          {children}
+          <Footer />
+        </div>
+      </body>
     </html>
   );
 }
