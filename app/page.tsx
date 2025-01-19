@@ -2,16 +2,30 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloud } from "@fortawesome/free-solid-svg-icons";
 import Footer from "@/components/footer/Footer";
 import { Button } from "@/components/ui/button";
+import Navigation from "./components/navigation/Navigation";
 
 export default function Home() {
   return (
-    <main className="container mx-auto text-slate-400 bg-slate-900 min-h-[100dvh] flex items-center flex-col justify-center w-full max-w-[800px] gap-8 p-4 md:p-8">
-      <div className="flex justify-center">
-        <FontAwesomeIcon icon={faCloud} className="w-[100px]" />
-      </div>
-      <h1 className="text-3xl font-bold text-red-50">Diego Roccia</h1>
-      <Button variant="link">Enter</Button>
+    <div className="min-h-[100dvh] flex flex-col">
+      <Navigation />
+
+      <main className="container mx-auto flex-1 max-w-[800px] px-4 flex items-center">
+        <section className="h-full flex flex-col items-center justify-center gap-8 w-full">
+          <figure className="flex justify-center">
+            <FontAwesomeIcon
+              icon={faCloud}
+              className="w-[100px]"
+              aria-hidden="true"
+            />
+          </figure>
+          <h1 className="text-4xl font-bold">Diego Roccia</h1>
+          <Button variant="outline" className="text-lg hover:text-slate-200">
+            Enter
+          </Button>
+        </section>
+      </main>
+
       <Footer />
-    </main>
+    </div>
   );
 }

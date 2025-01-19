@@ -14,7 +14,7 @@ const socialLinks: { network: IconName; link: string }[] = [
 
 export default function Footer() {
   return (
-    <footer className="flex-auto w-full text-slate-600 fixed bottom-0 p-4">
+    <footer className="flex-auto w-full fixed bottom-0 p-4">
       <div className="flex justify-end space-x-2">
         {socialLinks.map((social) => (
           <a
