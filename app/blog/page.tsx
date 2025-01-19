@@ -1,7 +1,20 @@
 import BlogPostTeaser from "./components/post/Post";
-import { getAllBlogPosts } from "../lib/posts";
+//import { getAllBlogPosts } from "../lib/posts";
 
-const blogPosts = await getAllBlogPosts();
+//const blogPosts = await getAllBlogPosts();
+//
+
+const blogPosts = {
+  blogData: [
+    {
+      slug: "Test post",
+      frontmatter: {
+        title: "testing ",
+        date: "yesterday",
+      },
+    },
+  ],
+};
 
 export default function BlogPage() {
   return (
@@ -9,7 +22,6 @@ export default function BlogPage() {
       <div className="space-y-8">
         <div className="space-y-4">
           <h1 className="text-3xl font-bold tracking-tight">Blog Posts</h1>
-          <p>My thoughts on software development, technology, and more.</p>
         </div>
 
         {/* Blog post list */}
@@ -23,12 +35,6 @@ export default function BlogPage() {
               readingTime="5 min"
             />
           ))}
-          <BlogPostTeaser
-            title="Understanding TypeScript Generics"
-            description="A deep dive into TypeScript generics and their practical applications."
-            date="November 15, 2023"
-            readingTime="8 min"
-          />
         </div>
       </div>
     </div>
