@@ -1,6 +1,8 @@
-import { getPosts } from "@/lib/utils";
+import { getAllPosts } from "@/lib/utils";
+import { remark } from "remark";
+import html from "remark-html";
 
-const posts = getPosts();
+const posts = getAllPosts();
 
 export function generateStaticParams() {
   return posts.map((post) => ({
@@ -21,10 +23,23 @@ export default async function Page({
     return <div>Post not found</div>;
   }
 
+  const processedContent = await remark().use(html).process(post.content);
+  const contentHtml = processedContent.toString();
+
   return (
-    <article className="prose lg:prose-xl">
-      <h1>{post.title}</h1>
-      <div>{post.content}</div>
+    <article className="container mx-auto max-w-3xl py-20 px-4">
+      <header className="mb-12 space-y-4">
+        <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl text-foreground">
+          {post.title}
+        </h1>
+        <p className="text-muted-foreground">
+          Published on {String(post.date)} • 5 min read
+        </p>
+      </header>
+      <div 
+        className="prose prose-invert prose-emerald max-w-none"
+        dangerouslySetInnerHTML={{ __html: contentHtml }} 
+      />
     </article>
   );
 }

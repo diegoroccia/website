@@ -1,35 +1,35 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IconName, library } from "@fortawesome/fontawesome-svg-core";
-import { fab } from "@fortawesome/free-brands-svg-icons";
+import { Github, Linkedin, Mail, Twitter } from "lucide-react";
 
-library.add(fab);
-
-const socialLinks: { network: IconName; link: string }[] = [
-  { network: "telegram", link: "mailto:diego.roccia@gmail.com" },
-  { network: "linkedin", link: "https://www.linkedin.com/in/diegoroccia" },
-  { network: "github", link: "https://www.github.com/diegoroccia" },
-  { network: "facebook", link: "https://www.facebook.com/diego.roccia" },
-  { network: "instagram", link: "https://www.instagram.com/diegoroccia" },
+const socialLinks = [
+  { icon: Mail, link: "mailto:diego.roccia@gmail.com", label: "Email" },
+  { icon: Linkedin, link: "https://www.linkedin.com/in/diegoroccia", label: "LinkedIn" },
+  { icon: Github, link: "https://www.github.com/diegoroccia", label: "GitHub" },
+  { icon: Twitter, link: "https://twitter.com/diegoroccia", label: "Twitter" },
 ];
 
 export default function Footer() {
   return (
-    <footer className="flex-auto w-full fixed bottom-0 p-4">
-      <div className="flex justify-end space-x-2">
-        {socialLinks.map((social) => (
-          <a
-            key={social.network}
-            href={social.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={social.network}
-          >
-            <FontAwesomeIcon
-              icon={["fab", social.network as IconName]}
-              className="w-4 h-4"
-            />
-          </a>
-        ))}
+    <footer className="w-full border-t border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-8">
+      <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row max-w-screen-2xl">
+        <div className="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
+          <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
+            Built by <span className="font-bold text-primary">Diego Roccia</span>. The source code is available on <a href="https://github.com/diegoroccia" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-primary">GitHub</a>.
+          </p>
+        </div>
+        <div className="flex gap-4 px-8 md:px-0">
+          {socialLinks.map((social, idx) => (
+            <a
+              key={idx}
+              href={social.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={social.label}
+              className="text-muted-foreground hover:text-primary transition-colors"
+            >
+              <social.icon className="h-5 w-5" />
+            </a>
+          ))}
+        </div>
       </div>
     </footer>
   );

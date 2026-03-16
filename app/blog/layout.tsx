@@ -4,14 +4,20 @@ export default function BlogPageLayouts({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="container mx-auto max-w-4xl py-10">
-      <div className="space-y-8">
-        <div className="space-y-4">
-          <h1 className="text-3xl font-bold tracking-tight">Blog Posts</h1>
-        </div>
+    <div className="container mx-auto max-w-4xl py-20 px-4">
+      <div className="space-y-12">
+        <header className="space-y-4">
+          <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl">
+            Blog Posts
+          </h1>
+          <p className="text-xl text-muted-foreground">
+            Thoughts on software engineering, technology, and learning.
+          </p>
+        </header>
 
-        {/* Blog post list */}
-        <div className="grid gap-6">{children}</div>
+        <div className="grid gap-8 md:grid-cols-2">
+          {children}
+        </div>
       </div>
     </div>
   );
