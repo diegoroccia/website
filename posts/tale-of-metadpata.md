@@ -12,12 +12,7 @@ A single character typo - changing "metadata" to "metadpata" in a configuration 
 
 ## What We Learned
 
-The incident highlighted that "supertools" - large-scale automation scripts that manage infrastructure at scale - need more than just standard code review processes. They require layered safety mechanisms:
-
-- **Schema validation** with jsonschema and pre-commit hooks to catch configuration errors before they reach production
-- **Change previews** using AWS CloudFormation ChangeSet to show human-readable diffs in pull requests
-- **Phased rollouts** to limit blast radius and catch issues early
-- **Scream tests** - a one-week simulated deletion period before permanent resource removal
+The incident highlighted that "supertools"—large-scale automation scripts that manage infrastructure at scale—need more than just standard code review processes. They require layered safety mechanisms. We implemented schema validation with jsonschema and pre-commit hooks to catch configuration errors before they reach production. Change previews using AWS CloudFormation ChangeSet now show human-readable diffs in pull requests, giving reviewers clear visibility into what will change. Phased rollouts limit blast radius and catch issues early, while "scream tests" introduce a one-week simulated deletion period before permanent resource removal, giving teams time to catch mistakes.
 
 ## The Bigger Picture
 

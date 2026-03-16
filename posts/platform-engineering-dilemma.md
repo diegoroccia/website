@@ -21,10 +21,7 @@ The lesson? Visibility is the first step to freedom. You have to quantify the to
 
 When two teams become one, there is an immediate "onboarding tax." Engineers who were experts in one domain (e.g., managed AWS environments) suddenly need to cross-train on another (e.g., container orchestration).
 
-This period is dangerous because velocity naturally dips just as expectations from leadership usually rise. To survive this, you have to:
-
-* Dedicate time to knowledge sharing: It feels like "non-work," but it’s the only way to prevent single-point-of-failure silos.  
-* Be realistic about commitments: You cannot execute two full roadmaps with one merged team. You have to pick one unified path.
+This period is dangerous because velocity naturally dips just as expectations from leadership usually rise. To survive this transition, you need to dedicate time to knowledge sharing—even though it feels like "non-work," it’s the only way to prevent single-point-of-failure silos. You also need to be realistic about commitments: you cannot execute two full roadmaps with one merged team. You have to pick one unified path and commit to it fully.
 
 ## The Power of "No" (and the Necessity of Deprioritization)
 

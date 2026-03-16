@@ -14,12 +14,7 @@ The fundamental issue is that traditional Infrastructure as Code (IaC) is often 
 
 To bridge this gap, a Control Plane approach is being proposed. In this model, the platform provides a high-level API that accepts "Intent." Instead of managing individual resources, developers submit a single manifest that describes a logical service. The control plane then takes on the responsibility of orchestration, ensuring that the actual state of the cloud matches the desired intent.
 
-This shift targets two critical benefits:
-
-1. Increased Velocity  
-   Engineers currently spend significant time poring over provider-specific documentation instead of writing business logic. By focusing on intent, the time-to-market for a new feature is no longer throttled by the complexity of the infrastructure required to support it. The focus shifts from VPC peering to service connectivity.  
-2. Proactive Security  
-   An intent-based model moves away from "detective" controls \- scanners that find mistakes after they are deployed. Instead, the abstraction itself acts as a guardrail. If the abstraction only allows for encrypted, private databases, it becomes structurally impossible to accidentally create an insecure one.
+This shift targets two critical benefits. First, it dramatically increases velocity—engineers currently spend significant time poring over provider-specific documentation instead of writing business logic. By focusing on intent, the time-to-market for a new feature is no longer throttled by the complexity of the infrastructure required to support it. The focus shifts from VPC peering to service connectivity. Second, it enables proactive security. An intent-based model moves away from "detective" controls—scanners that find mistakes after they are deployed. Instead, the abstraction itself acts as a guardrail. If the abstraction only allows for encrypted, private databases, it becomes structurally impossible to accidentally create an insecure one.
 
 ## Exploring the Orchestration Landscape
 
@@ -52,9 +47,9 @@ Behind the scenes, the control plane takes this simple intent and orchestrates t
 
 ### Observations from Initial Testing
 
-- **Drift Detection and Continuous Reconciliation**: Unlike a standard CI/CD pipeline that runs once and stops, this approach utilizes a continuous control loop. Testing shows that if a setting is changed manually in the cloud console, the platform detects the discrepancy and "self-heal" the resource back to the desired state defined in Git.
-- **Composite Resource Definitions (XRDs)**: Defining a custom "API" for infrastructure allows the platform to hide the complexity of the underlying provider. Multiple resources - the database, subnet groups, parameter groups, and IAM roles - are bundled into a single logical unit that is versioned and managed as one.
-- **API-First Infrastructure**: Because these abstractions are standard Kubernetes objects, they integrate with the internal developer portal (IDP). Infrastructure is treated exactly like a microservice - with the same RBAC, auditing, and tooling.
+Unlike a standard CI/CD pipeline that runs once and stops, this approach utilizes a continuous control loop for drift detection and reconciliation. Testing shows that if a setting is changed manually in the cloud console, the platform detects the discrepancy and self-heals the resource back to the desired state defined in Git.
+
+The use of Composite Resource Definitions (XRDs) allows the platform to hide the complexity of the underlying provider. Multiple resources—the database, subnet groups, parameter groups, and IAM roles—are bundled into a single logical unit that is versioned and managed as one. Because these abstractions are standard Kubernetes objects, they integrate seamlessly with the internal developer portal. Infrastructure is treated exactly like a microservice, with the same RBAC, auditing, and tooling.
 
 ## The Managed Appeal of Kro
 
@@ -66,10 +61,7 @@ The fact that Kro is now provided as a managed capability within EKS significant
 
 A recurring lesson from this project is that "good abstractions are hard." This is the classic leaky abstraction problem. If an abstraction is too simple, it cannot support the 10% of use cases that require specific performance tuning. If it is too powerful, it becomes just as complex as the cloud provider’s native API.
 
-The proposed strategy follows a Convention over Configuration approach:
-
-- **The 90% Case**: The high-level Cache object provides a "sane" environment that works out of the box with sensible defaults. This is the intended "Golden Path" for the majority of workloads.
-- **The 10% Case**: For power users, "escape hatches" or advanced parameter blocks are provided. It is accepted that some hyper-bespoke systems may still require lower-level tools, but the primary goal is making common tasks 10x easier for the majority.
+The proposed strategy follows a Convention over Configuration approach. For the 90% case, the high-level Cache object provides a "sane" environment that works out of the box with sensible defaults—this is the intended "Golden Path" for the majority of workloads. For the remaining 10% of power users who need more control, "escape hatches" or advanced parameter blocks are provided. While it's accepted that some hyper-bespoke systems may still require lower-level tools, the primary goal is making common tasks 10x easier for the majority.
 
 ## A Vision for Application-Centric Abstractions
 

@@ -10,12 +10,7 @@ What if your support system could learn from every resolved ticket and automatic
 
 ## The Problem
 
-Our team manages infrastructure and platform support through a centralized GitHub repository. We were facing several challenges:
-
-- **Manual Triage**: Every new issue required someone to read it, understand the context, and assign it to the right team
-- **Lost Knowledge**: Once an issue was resolved, the solution often stayed buried in that specific ticket thread
-- **Repeated Questions**: Users kept opening tickets for problems we'd already solved
-- **Slow Response Times**: Our support engineers spent hours searching through old tickets to find similar issues
+Our team manages infrastructure and platform support through a centralized GitHub repository. We were facing several interconnected challenges. Every new issue required manual triage—someone had to read it, understand the context, and assign it to the right team. Once an issue was resolved, the solution often stayed buried in that specific ticket thread, leading to lost knowledge. Users kept opening tickets for problems we'd already solved, and our support engineers spent hours searching through old tickets to find similar issues.
 
 We needed a system that could automatically learn from resolved tickets and provide instant, context-aware assistance for new ones.
 
@@ -51,24 +46,9 @@ This workflow monitors our GitHub support repository and handles issues througho
 
 This workflow provides our team with instant access to the knowledge base through conversational commands:
 
-**`/suggest` command:**
-- Reads the entire chat thread context
-- Queries the knowledge base for similar issues
-- Suggests solutions with references to past tickets
-- Responds in the same thread
+The **`/suggest`** command reads the entire chat thread context, queries the knowledge base for similar issues, and suggests solutions with references to past tickets—all within the same thread. The **`/save`** command allows manual addition of solutions to the knowledge base, which is particularly useful for documenting tribal knowledge.
 
-**`/save` command:**
-- Allows manual addition of solutions to the knowledge base
-- Useful for documenting tribal knowledge
-
-**`/troubleshoot <application_name>` command:**
-- Integrates with our observability platform via MCP protocol
-- Performs real-time diagnostics:
-  - Checks synthetic metrics for the last 5 minutes
-  - Identifies error spikes and latency issues
-  - Extracts the 5 most recent error spans
-  - Synthesizes root cause analysis
-- Optimized for speed with targeted queries and small time windows
+The **`/troubleshoot <application_name>`** command integrates with our observability platform via MCP protocol to perform real-time diagnostics. It checks synthetic metrics for the last 5 minutes, identifies error spikes and latency issues, extracts the 5 most recent error spans, and synthesizes a root cause analysis. The entire flow is optimized for speed with targeted queries and small time windows.
 
 ## Technical Architecture
 
@@ -101,24 +81,20 @@ graph TB
 ```
 
 ### AI Layer
-- **LLM**: Claude 3.5 Sonnet via AWS Bedrock for reasoning and synthesis
-- **Embeddings**: Amazon Titan Embed v2 for vector representations
-- **Structured Output**: JSON schema validation ensures consistent knowledge base entries
+
+The AI layer uses Claude 3.5 Sonnet via AWS Bedrock for reasoning and synthesis, while Amazon Titan Embed v2 handles vector representations. JSON schema validation ensures consistent knowledge base entries through structured output.
 
 ### Data Layer
-- **Vector Database**: PostgreSQL with PGVector extension
-- **Semantic Search**: Cosine similarity search with top-K retrieval
-- **Metadata**: Each vector stores issue number, URL, solution, team, and root cause
+
+PostgreSQL with the PGVector extension serves as our vector database, enabling cosine similarity search with top-K retrieval. Each vector stores comprehensive metadata including issue number, URL, solution, owning team, and root cause analysis.
 
 ### Integration Layer
-- **GitHub API**: Webhooks for issue events, REST API for comments and labels
-- **Google Chat API**: Webhook triggers and message posting
-- **Observability MCP**: Model Context Protocol client for metrics and traces
+
+The GitHub API provides webhooks for issue events and REST API access for comments and labels. Google Chat API handles webhook triggers and message posting, while our observability platform connects via Model Context Protocol for metrics and traces.
 
 ### Orchestration
-- **n8n**: Visual workflow automation connecting all components
-- **Conditional Logic**: Switch nodes route different issue actions
-- **Human-in-the-Loop**: Approval gates for AI-generated content
+
+n8n provides the visual workflow automation that connects all components. Switch nodes route different issue actions based on conditional logic, and approval gates enable human-in-the-loop oversight for AI-generated content.
 
 ## Workflow Diagrams
 
@@ -205,32 +181,17 @@ The AI is trained to extract only the **final working solution**, ignoring all t
 
 ### 3. Precision Over Recall
 
-When suggesting solutions, we prioritize accuracy. The prompt instructs the AI:
-- Include exact error codes and CLI commands
-- No empathetic filler—just technical solutions
-- Only mention paths that actually worked
-- If no solution is found, explicitly say so rather than hallucinating
+When suggesting solutions, we prioritize accuracy over completeness. The prompt instructs the AI to include exact error codes and CLI commands, avoid empathetic filler in favor of pure technical solutions, and only mention approaches that actually worked. If no solution is found, the system explicitly says so rather than hallucinating an answer.
 
 ### 4. Speed-Optimized Troubleshooting
 
-The `/troubleshoot` command uses a tiered retrieval strategy:
-- Start with synthetic metrics (pre-aggregated)
-- Only fetch raw spans if errors are detected
-- Limit time windows to reduce data volume
-- Request only specific attributes needed for diagnosis
-
-This reduces latency from minutes to seconds.
+The `/troubleshoot` command uses a tiered retrieval strategy that dramatically reduces latency. It starts with synthetic metrics (pre-aggregated data) and only fetches raw spans if errors are detected. By limiting time windows to reduce data volume and requesting only specific attributes needed for diagnosis, we've reduced troubleshooting latency from minutes to seconds.
 
 ## Real-World Impact
 
-After deploying this system, we've seen:
+After deploying this system, we've seen transformative results. Triage time has dropped by 60%, as the AI handles initial classification and routing. Common problems that previously required engineer time now receive instant answers. The knowledge base preserves expertise that survives team turnover, and its accuracy continues to improve as it learns from each new resolution.
 
-- **60% reduction** in time spent triaging issues
-- **Instant answers** for common problems that previously required engineer time
-- **Knowledge retention** that survives team turnover
-- **Self-improving accuracy** as the knowledge base grows
-
-The system has also surfaced patterns we didn't know existed—clusters of similar issues that revealed underlying infrastructure problems we could fix proactively.
+Perhaps most valuable is what the system has revealed about our infrastructure. By clustering similar issues, it's surfaced patterns we didn't know existed—recurring problems that pointed to underlying infrastructure issues we could fix proactively rather than reactively.
 
 ## Lessons Learned
 

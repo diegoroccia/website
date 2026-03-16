@@ -8,12 +8,7 @@ I'm Diego Roccia, a Platform & Cloud Infrastructure Engineer based in Berlin, Ge
 
 ## What to Expect
 
-This blog is where I'll share my experiences and insights on:
-
-- **Platform Engineering** - Building internal developer platforms and tooling that enable teams to move fast
-- **FinOps** - Cloud cost optimization strategies and practices from managing AWS infrastructure at scale
-- **Technical Leadership** - Lessons learned from leading engineering teams and making architectural decisions
-- **Cloud Infrastructure** - Real-world patterns, challenges, and solutions in distributed systems
+This blog is where I'll share my experiences and insights on platform engineering, FinOps, technical leadership, and cloud infrastructure. You'll find posts about building internal developer platforms and tooling that enable teams to move fast, cloud cost optimization strategies from managing AWS infrastructure at scale, lessons learned from leading engineering teams and making architectural decisions, and real-world patterns, challenges, and solutions in distributed systems.
 
 ## Why This Blog?
 
