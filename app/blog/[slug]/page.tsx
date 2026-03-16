@@ -1,6 +1,7 @@
 import { getAllPosts } from "@/lib/utils";
 import { remark } from "remark";
 import html from "remark-html";
+import MermaidRenderer from "@/components/MermaidRenderer";
 
 const posts = getAllPosts();
 
@@ -40,6 +41,7 @@ export default async function Page({
         className="blog-content"
         dangerouslySetInnerHTML={{ __html: contentHtml }}
       />
+      <MermaidRenderer />
     </article>
   );
 }
