@@ -11,14 +11,22 @@ export default function Home() {
             Hi, I&apos;m <span className="text-primary">Diego Roccia</span>.
           </h1>
           <p className="text-xl text-muted-foreground max-w-[600px] mx-auto">
-            A software engineer building modern applications with focus on simplicity and performance.
+            Engineering Manager specializing in Platform Engineering, FinOps, and Cloud Infrastructure leadership.
+          </p>
+          <p className="text-md text-muted-foreground">
+            Based in Berlin, Germany
           </p>
         </div>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button asChild size="lg" className="rounded-full px-8">
+            <Link href="/about">
+              About Me <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="lg" className="rounded-full px-8">
             <Link href="/blog">
-              Read Blog <ArrowRight className="ml-2 h-4 w-4" />
+              Blog
             </Link>
           </Button>
           <Button asChild variant="outline" size="lg" className="rounded-full px-8">
@@ -30,16 +38,16 @@ export default function Home() {
 
         <div className="pt-20 grid grid-cols-1 sm:grid-cols-3 gap-8 text-left">
           <div className="space-y-2">
-            <h3 className="font-bold text-primary">Web Dev</h3>
-            <p className="text-sm text-muted-foreground">React, Next.js, and modern CSS for high-performance frontends.</p>
+            <h3 className="font-bold text-primary">Cloud & FinOps</h3>
+            <p className="text-sm text-muted-foreground">AWS cloud architecture optimization and cost management at scale.</p>
           </div>
           <div className="space-y-2">
-            <h3 className="font-bold text-primary">Backend</h3>
-            <p className="text-sm text-muted-foreground">Scalable services with Node.js, Go, and PostgreSQL.</p>
+            <h3 className="font-bold text-primary">Platform Leadership</h3>
+            <p className="text-sm text-muted-foreground">Building and leading teams to deliver resilient infrastructure platforms.</p>
           </div>
           <div className="space-y-2">
-            <h3 className="font-bold text-primary">Open Source</h3>
-            <p className="text-sm text-muted-foreground">Contributing to tools that make developer lives easier.</p>
+            <h3 className="font-bold text-primary">Beyond Code</h3>
+            <p className="text-sm text-muted-foreground">Passionate about cooking, board games, home automation, and family time.</p>
           </div>
         </div>
       </section>

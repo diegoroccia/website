@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 
 const menuItems = [
   { label: "Home", link: "/" },
+  { label: "About", link: "/about" },
   { label: "Blog", link: "/blog" },
 ];
 

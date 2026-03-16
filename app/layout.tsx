@@ -5,7 +5,7 @@ import Navigation from "./components/navigation/Navigation";
 
 export const metadata: Metadata = {
   title: "Diego Roccia",
-  description: "My personal homepage",
+  description: "Diego Roccia - Engineering Manager specializing in Platform Engineering, FinOps, and Cloud Infrastructure",
 };
 
 export default function RootLayout({
