@@ -24,7 +24,7 @@ export default function Home() {
             Hi, I&apos;m <span className="text-primary">Diego Roccia</span>.
           </h1>
           <p className="text-xl text-muted-foreground max-w-[600px] mx-auto animate-in fade-in duration-500">
-            Platform & Cloud Infrastructure Engineer specializing in FinOps and Technical Leadership.
+            Building things, learning constantly, loving the journey.
           </p>
           <p className="text-md text-muted-foreground animate-in fade-in duration-500">
             Based in Berlin, Germany
