@@ -27,7 +27,7 @@ export default function Home() {
             Building things, learning constantly, loving the journey.
           </p>
           <p className="text-md text-muted-foreground animate-in fade-in duration-500">
-            Based in Berlin, Germany
+            Italian, currently based in Berlin
           </p>
         </div>
         
