@@ -27,7 +27,7 @@ export default async function Page({
   const contentHtml = processedContent.toString();
 
   return (
-    <article className="container mx-auto max-w-3xl py-20 px-4">
+    <article className="mx-auto py-20 px-8 md:px-16 lg:px-32">
       <header className="mb-12 space-y-4">
         <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl text-foreground">
           {post.title}
@@ -36,9 +36,9 @@ export default async function Page({
           Published on {String(post.date)} • 5 min read
         </p>
       </header>
-      <div 
-        className="prose prose-invert prose-emerald max-w-none"
-        dangerouslySetInnerHTML={{ __html: contentHtml }} 
+      <div
+        className="blog-content"
+        dangerouslySetInnerHTML={{ __html: contentHtml }}
       />
     </article>
   );

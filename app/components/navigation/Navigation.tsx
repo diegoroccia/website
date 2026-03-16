@@ -27,16 +27,17 @@ export default function Navigation() {
           <NavigationMenuList>
             {menuItems.map((menuItem, idx) => (
               <NavigationMenuItem key={idx}>
-                <Link href={menuItem.link} legacyBehavior passHref>
-                  <NavigationMenuLink 
+                <NavigationMenuLink asChild>
+                  <Link
+                    href={menuItem.link}
                     className={cn(
-                      navigationMenuTriggerStyle(), 
+                      navigationMenuTriggerStyle(),
                       "bg-transparent hover:text-primary transition-colors"
                     )}
                   >
                     {menuItem.label}
-                  </NavigationMenuLink>
-                </Link>
+                  </Link>
+                </NavigationMenuLink>
               </NavigationMenuItem>
             ))}
           </NavigationMenuList>

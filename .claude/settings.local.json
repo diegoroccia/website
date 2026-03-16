@@ -4,7 +4,16 @@
       "Bash(test:*)",
       "Bash(npm run:*)",
       "Bash(ls:*)",
-      "Bash(lsof:*)"
+      "Bash(lsof:*)",
+      "Bash(git push:*)",
+      "Bash(git add:*)",
+      "WebFetch(domain:engineering.zalando.com)",
+      "Bash(npm install:*)",
+      "Bash(curl:*)",
+      "Bash(npm ls:*)",
+      "Bash(npx next:*)",
+      "Bash(head:*)",
+      "Bash(npm audit:*)"
     ]
   }
 }
