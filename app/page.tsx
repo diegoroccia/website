@@ -2,16 +2,12 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import { AnimatedBackground } from "@/components/AnimatedBackground";
 
 export default function Home() {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-[calc(100vh-3.5rem)] px-4 overflow-hidden">
-      {/* Animated grid background */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background"></div>
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-3xl animate-pulse"></div>
-      </div>
+      <AnimatedBackground />
       <section className="max-w-[800px] w-full text-center space-y-8">
         <div className="space-y-4">
           <div className="flex justify-center mb-6 animate-in fade-in duration-500">
