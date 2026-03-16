@@ -4,9 +4,7 @@ description: "An introduction to what you'll find here - thoughts on platform en
 date: "2026-03-16"
 ---
 
-# Welcome!
-
-Hi, I'm Diego Roccia, a Platform & Cloud Infrastructure Engineer based in Berlin, Germany. I've spent most of my career as a Principal/Staff Engineer building resilient infrastructure at scale, with a recent shift into technical leadership roles.
+I'm Diego Roccia, a Platform & Cloud Infrastructure Engineer based in Berlin, Germany. I've spent most of my career as a Principal/Staff Engineer building resilient infrastructure at scale, with a recent shift into technical leadership roles.
 
 ## What to Expect
 
@@ -24,7 +22,3 @@ Throughout my career at companies like Zalando and others, I've accumulated know
 ## Beyond Work
 
 When I'm not architecting cloud infrastructure, you'll find me experimenting with new recipes in the kitchen, strategizing over board games, or tinkering with home automation projects. I believe the best engineers bring diverse perspectives to their work.
-
----
-
-Thanks for stopping by. More posts coming soon!

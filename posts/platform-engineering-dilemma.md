@@ -44,12 +44,10 @@ Every custom, bespoke integration your team maintains is a liability. The goal s
 
 The final stage of winning the platform battle is moving from a "ticket-based" culture to a "self-service" culture. If a developer needs to open a PR for a simple configuration change, the platform has failed.
 
-Our roadmap for 2026 focuses heavily on this: enabling users to manage their own infrastructure within established guardrails. This isn't just about "developer experience"; it’s about freeing the platform team to work on the *next* generation of problems rather than reviewing the same configuration PRs every day.
+Our roadmap for 2026 focuses heavily on this: enabling users to manage their own infrastructure within established guardrails. This isn’t just about "developer experience"; it’s about freeing the platform team to work on the *next* generation of problems rather than reviewing the same configuration PRs every day.
 
 ## Closing Thoughts
 
 Merging teams and managing a massive infrastructure scope is an exercise in focus. It requires acknowledging the struggle of operational load, paying the "unification tax" upfront, and having the courage to decommission legacy systems that no longer serve the mission.
 
-The path to a high-impact platform isn't through adding more features - it's through removing the friction that keeps your engineers (and your users) from moving fast.
-
-*Do you have experience merging infrastructure teams? How do you handle the balance between "keeping the lights on" and strategic modernization? Let's discuss on \[Twitter/X/LinkedIn\].*
+The path to a high-impact platform isn’t through adding more features - it’s through removing the friction that keeps your engineers (and your users) from moving fast.

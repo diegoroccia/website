@@ -1,10 +1,8 @@
 ---
 title: "Building an AI-Powered Support Automation System with n8n"
 description: "How we automated our GitHub support tracker with n8n, Claude AI, and vector embeddings to transform reactive support into a self-learning knowledge base"
-date: "2026-03-17"
+date: "2026-11-27"
 ---
-
-# Building an AI-Powered Support Automation System with n8n
 
 Support tickets are the heartbeat of any engineering organization. They reveal recurring issues, knowledge gaps, and opportunities for improvement. But they also represent a significant operational burden—triaging, routing, resolving, and documenting solutions across hundreds or thousands of tickets.
 
@@ -431,7 +429,3 @@ Building a self-learning support system isn't just about automation—it's about
 The best part? This entire system runs on infrastructure we already had (AWS Bedrock, PostgreSQL) and required no custom application code. n8n's visual workflow builder made it easy to iterate and experiment until we found the right architecture.
 
 If you're drowning in support tickets, consider this: every resolved ticket is training data for your next automation. The question isn't whether to build a system like this—it's how soon you can start learning from your own solutions.
-
----
-
-*Want to learn more about our platform engineering work? Follow my blog for deep dives into automation, AI, and developer experience.*
