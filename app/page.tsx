@@ -28,7 +28,7 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="pt-4 md:pt-12 grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 text-left">
+        {/* <div className="pt-4 md:pt-12 grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 text-left">
           <div className="p-6 space-y-2 rounded-lg border border-border/50 bg-card/30 backdrop-blur-sm animate-in fade-in duration-500 transition-all duration-300 hover:scale-105 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10">
             <h3 className="font-bold text-primary">Professional</h3>
             <p className="text-sm text-muted-foreground">Platform engineering, cloud infrastructure, FinOps, and leading teams to build resilient systems at scale.</p>
@@ -41,7 +41,7 @@ export default function Home() {
             <h3 className="font-bold text-primary">Life</h3>
             <p className="text-sm text-muted-foreground">Family time, cooking adventures, parenting, board games, and discovering Berlin.</p>
           </div>
-        </div>
+        </div> */}
       </section>
     </div>
   );
