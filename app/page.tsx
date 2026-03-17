@@ -3,9 +3,9 @@ import { AnimatedBackground } from "@/components/AnimatedBackground";
 
 export default function Home() {
   return (
-    <div className="relative flex flex-col items-center justify-center h-full px-4 py-4">
+    <div className="w-full px-4">
       <AnimatedBackground />
-      <section className="max-w-[800px] w-full text-center space-y-8">
+      <section className="max-w-[800px] mx-auto text-center space-y-8">
         <div className="space-y-4">
           <div className="flex justify-center mb-6 animate-in fade-in duration-500">
             <Image

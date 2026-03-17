@@ -94,8 +94,8 @@ export function AnimatedBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 -z-10"
-      style={{ opacity: 0.4 }}
+      className="fixed inset-0 -z-10 pointer-events-none"
+      style={{ opacity: 0.7 }}
     />
   );
 }

@@ -15,12 +15,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className="flex h-screen flex-col bg-background text-foreground font-sans overflow-hidden">
-        <Navigation />
-        <main className="flex-1">
-          {children}
-        </main>
-        <Footer />
+      <body className="h-screen overflow-hidden bg-background text-foreground font-sans">
+        <div className="grid grid-rows-[auto_1fr_auto] h-full">
+          <Navigation />
+          <main className="flex items-center justify-center overflow-y-auto">
+            {children}
+          </main>
+          <Footer />
+        </div>
       </body>
     </html>
   );
