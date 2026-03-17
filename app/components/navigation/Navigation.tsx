@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "../theme-toggle";
 
 const menuItems = [
   { label: "Home", link: "/" },
@@ -42,6 +43,9 @@ export default function Navigation() {
             ))}
           </NavigationMenuList>
         </NavigationMenu>
+        <div className="ml-auto">
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );

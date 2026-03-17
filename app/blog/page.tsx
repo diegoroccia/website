@@ -1,5 +1,5 @@
 import BlogPostTeaser from "./components/post/Post";
-import { getAllPosts } from "@/lib/utils";
+import { getAllPosts } from "@/lib/posts";
 
 export default function BlogPage() {
   const blogPosts = getAllPosts();

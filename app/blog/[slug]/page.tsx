@@ -1,11 +1,10 @@
-import { getAllPosts } from "@/lib/utils";
+import { getAllPosts } from "@/lib/posts";
 import { remark } from "remark";
 import html from "remark-html";
 import MermaidRenderer from "@/components/MermaidRenderer";
 
-const posts = getAllPosts();
-
 export function generateStaticParams() {
+  const posts = getAllPosts();
   return posts.map((post) => ({
     slug: post.slug,
   }));
@@ -17,6 +16,7 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const p = await params;
+  const posts = getAllPosts();
 
   const post = posts.find((post) => post.slug === p.slug);
 
