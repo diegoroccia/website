@@ -18,7 +18,7 @@ export default function RootLayout({
       <body className="h-screen overflow-hidden bg-background text-foreground font-sans">
         <div className="grid grid-rows-[auto_1fr_auto] h-full">
           <Navigation />
-          <main className="flex items-center justify-center overflow-y-auto">
+          <main className="overflow-y-auto">
             {children}
           </main>
           <Footer />
