@@ -15,7 +15,10 @@
       "Bash(head:*)",
       "Bash(npm audit:*)",
       "Bash(pgrep:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(npm list:*)",
+      "Bash(pkill:*)",
+      "Bash(kill:*)"
     ]
   }
 }
