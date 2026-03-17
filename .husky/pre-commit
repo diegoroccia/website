@@ -1,1 +1,5 @@
-npm run lint
+#!/usr/bin/env sh
+. "$(dirname "$0")/_/h"
+
+npx lint-staged
+npx tsc --noEmit
