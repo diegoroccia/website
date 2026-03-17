@@ -8,7 +8,7 @@ export default function About() {
       {/* Hero Section */}
       <section className="space-y-4 text-center">
         <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-foreground">
-          About <span className="text-primary">Me</span>
+          <span className="text-primary">Resume</span>
         </h1>
         <p className="text-xl text-muted-foreground">
           Engineering Manager · Platform Engineering · FinOps
