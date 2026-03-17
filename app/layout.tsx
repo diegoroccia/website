@@ -16,9 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className="bg-background text-foreground font-sans md:h-screen md:overflow-hidden">
-        <div className="md:grid md:grid-rows-[auto_1fr_auto] md:h-full flex flex-col min-h-dvh">
+        <div className="flex flex-col h-dvh md:grid md:grid-rows-[auto_1fr_auto] md:h-full">
           <Navigation />
-          <main className="flex-1 md:overflow-y-auto">
+          <main className="flex-1 min-h-0 md:overflow-y-auto">
             {children}
           </main>
           <Footer />
