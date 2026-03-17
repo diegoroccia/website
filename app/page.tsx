@@ -1,12 +1,9 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
 
 export default function Home() {
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-[calc(100vh-3.5rem)] px-4 overflow-hidden">
+    <div className="relative flex flex-col items-center justify-center h-full px-4 py-4">
       <AnimatedBackground />
       <section className="max-w-[800px] w-full text-center space-y-8">
         <div className="space-y-4">
@@ -30,37 +27,19 @@ export default function Home() {
             Italian, currently based in Berlin
           </p>
         </div>
-        
-        <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in fade-in duration-500">
-          <Button asChild size="lg" className="rounded-full px-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/20">
-            <Link href="/about">
-              About Me <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-          <Button asChild variant="outline" size="lg" className="rounded-full px-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/20">
-            <Link href="/blog">
-              Blog
-            </Link>
-          </Button>
-          <Button asChild variant="outline" size="lg" className="rounded-full px-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/20">
-            <a href="https://github.com/diegoroccia" target="_blank" rel="noopener noreferrer">
-              GitHub
-            </a>
-          </Button>
-        </div>
 
-        <div className="pt-20 grid grid-cols-1 sm:grid-cols-3 gap-8 text-left">
-          <div className="space-y-2 animate-in fade-in duration-500 transition-all duration-300 hover:scale-105">
-            <h3 className="font-bold text-primary">Cloud & FinOps</h3>
-            <p className="text-sm text-muted-foreground">AWS cloud architecture optimization and cost management at scale.</p>
+        <div className="pt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 text-left">
+          <div className="p-6 space-y-2 rounded-lg border border-border/50 bg-card/30 backdrop-blur-sm animate-in fade-in duration-500 transition-all duration-300 hover:scale-105 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10">
+            <h3 className="font-bold text-primary">Professional</h3>
+            <p className="text-sm text-muted-foreground">Platform engineering, cloud infrastructure, FinOps, and leading teams to build resilient systems at scale.</p>
           </div>
-          <div className="space-y-2 animate-in fade-in duration-500 transition-all duration-300 hover:scale-105">
-            <h3 className="font-bold text-primary">Platform Leadership</h3>
-            <p className="text-sm text-muted-foreground">Building and leading teams to deliver resilient infrastructure platforms.</p>
+          <div className="p-6 space-y-2 rounded-lg border border-border/50 bg-card/30 backdrop-blur-sm animate-in fade-in duration-500 transition-all duration-300 hover:scale-105 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10">
+            <h3 className="font-bold text-primary">Tech Projects</h3>
+            <p className="text-sm text-muted-foreground">Home automation, open source contributions, and experimenting with new technologies.</p>
           </div>
-          <div className="space-y-2 animate-in fade-in duration-500 transition-all duration-300 hover:scale-105">
-            <h3 className="font-bold text-primary">Beyond Code</h3>
-            <p className="text-sm text-muted-foreground">Passionate about cooking, board games, home automation, and family time.</p>
+          <div className="p-6 space-y-2 rounded-lg border border-border/50 bg-card/30 backdrop-blur-sm animate-in fade-in duration-500 transition-all duration-300 hover:scale-105 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10">
+            <h3 className="font-bold text-primary">Life</h3>
+            <p className="text-sm text-muted-foreground">Family time, cooking adventures, parenting, board games, and discovering Berlin.</p>
           </div>
         </div>
       </section>
