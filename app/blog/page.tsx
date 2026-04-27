@@ -1,5 +1,11 @@
 import BlogPostTeaser from "./components/post/Post";
 import { getAllPosts } from "@/lib/posts";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Blog | Diego Roccia",
+  description: "Thoughts on software engineering, technology, and learning.",
+};
 
 export default function BlogPage() {
   const blogPosts = getAllPosts();
@@ -23,8 +29,8 @@ export default function BlogPage() {
               slug={post.slug}
               title={post.title}
               description={post.description}
-              date={String(post.date)}
-              readingTime="5 min"
+              date={post.date}
+              readingTime={post.readingTime}
             />
           ))}
         </div>

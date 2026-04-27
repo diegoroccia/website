@@ -23,7 +23,7 @@ export default function Home() {
           <p className="text-xl text-muted-foreground max-w-[600px] mx-auto animate-in fade-in duration-500">
             Building things, learning constantly, loving the journey.
           </p>
-          <p className="text-md text-muted-foreground animate-in fade-in duration-500">
+          <p className="text-base text-muted-foreground animate-in fade-in duration-500">
             Italian, currently based in Berlin
           </p>
         </div>

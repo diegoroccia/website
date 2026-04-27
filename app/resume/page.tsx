@@ -1,6 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Download } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Resume | Diego Roccia",
+  description: "Engineering Manager · Platform Engineering · FinOps",
+};
 
 export default function About() {
   return (
@@ -13,7 +19,7 @@ export default function About() {
         <p className="text-xl text-muted-foreground">
           Engineering Manager · Platform Engineering · FinOps
         </p>
-        <p className="text-md text-muted-foreground">
+        <p className="text-base text-muted-foreground">
           Berlin, Germany
         </p>
       </section>

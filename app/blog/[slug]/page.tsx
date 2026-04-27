@@ -1,13 +1,30 @@
-import { getAllPosts } from "@/lib/posts";
-import { remark } from "remark";
-import html from "remark-html";
+import { getAllPosts, getPostBySlug } from "@/lib/posts";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
+import rehypeSanitize from "rehype-sanitize";
+import rehypeHighlight from "rehype-highlight";
+import rehypeStringify from "rehype-stringify";
 import MermaidRenderer from "@/components/MermaidRenderer";
+import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 
 export function generateStaticParams() {
-  const posts = getAllPosts();
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
+  return getAllPosts().map((post) => ({ slug: post.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const post = getPostBySlug(slug);
+  if (!post) return {};
+  return {
+    title: `${post.title} | Diego Roccia`,
+    description: post.description,
+  };
 }
 
 export default async function Page({
@@ -15,16 +32,18 @@ export default async function Page({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const p = await params;
-  const posts = getAllPosts();
+  const { slug } = await params;
+  const post = getPostBySlug(slug);
 
-  const post = posts.find((post) => post.slug === p.slug);
+  if (!post) notFound();
 
-  if (!post) {
-    return <div>Post not found</div>;
-  }
-
-  const processedContent = await remark().use(html).process(post.content);
+  const processedContent = await unified()
+    .use(remarkParse)
+    .use(remarkRehype)
+    .use(rehypeSanitize)
+    .use(rehypeHighlight)
+    .use(rehypeStringify)
+    .process(post.content);
   const contentHtml = processedContent.toString();
 
   return (
@@ -34,7 +53,7 @@ export default async function Page({
           {post.title}
         </h1>
         <p className="text-muted-foreground">
-          Published on {String(post.date)} • 5 min read
+          Published on {post.date} • {post.readingTime} read
         </p>
       </header>
       <div

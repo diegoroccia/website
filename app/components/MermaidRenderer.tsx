@@ -6,13 +6,18 @@ import mermaid from "mermaid";
 export default function MermaidRenderer() {
   useEffect(() => {
     // Initialize mermaid with configuration
+    const primaryHsl = getComputedStyle(document.documentElement)
+      .getPropertyValue("--primary")
+      .trim();
+    const primaryColor = `hsl(${primaryHsl})`;
+
     mermaid.initialize({
-      startOnLoad: true,
+      startOnLoad: false,
       theme: "dark",
       themeVariables: {
-        primaryColor: "#3ecf8e",
+        primaryColor,
         primaryTextColor: "#fff",
-        primaryBorderColor: "#3ecf8e",
+        primaryBorderColor: primaryColor,
         lineColor: "#64748b",
         secondaryColor: "#1e293b",
         tertiaryColor: "#0f172a",

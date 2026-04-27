@@ -11,9 +11,9 @@ export default function Footer() {
   return (
     <footer className="fixed bottom-0 left-0 right-0 w-full border-t border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 py-4 z-50">
       <div className="container flex items-center justify-center gap-4 max-w-screen-2xl">
-        {socialLinks.map((social, idx) => (
+        {socialLinks.map((social) => (
           <a
-            key={idx}
+            key={social.label}
             href={social.link}
             target="_blank"
             rel="noopener noreferrer"

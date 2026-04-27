@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="bg-background text-foreground font-sans md:h-screen md:overflow-hidden">
-        <ThemeProvider defaultTheme="dark">
+        <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
           <div className="flex flex-col h-dvh md:grid md:grid-rows-[auto_1fr_auto] md:h-full">
             <Navigation />
             <main className="flex-1 min-h-0 md:overflow-y-auto pb-20">

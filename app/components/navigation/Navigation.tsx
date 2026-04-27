@@ -26,8 +26,8 @@ export default function Navigation() {
         </div>
         <NavigationMenu>
           <NavigationMenuList>
-            {menuItems.map((menuItem, idx) => (
-              <NavigationMenuItem key={idx}>
+            {menuItems.map((menuItem) => (
+              <NavigationMenuItem key={menuItem.link}>
                 <NavigationMenuLink asChild>
                   <Link
                     href={menuItem.link}

@@ -27,6 +27,12 @@ export function AnimatedBackground() {
 		resizeCanvas();
 		window.addEventListener('resize', resizeCanvas);
 
+		// Derive primary color from CSS variable so it follows the theme
+		const primaryHsl = getComputedStyle(document.documentElement)
+			.getPropertyValue('--primary')
+			.trim();
+		const primaryColorFaint = `hsl(${primaryHsl} / 0.3)`;
+
 		// Create nodes
 		const nodeCount = 50;
 		const nodes: Node[] = [];
@@ -42,6 +48,8 @@ export function AnimatedBackground() {
 		}
 
 		// Animation loop
+		let rafId: number;
+
 		const animate = () => {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -56,7 +64,7 @@ export function AnimatedBackground() {
 				if (node.y < 0 || node.y > canvas.height) node.vy *= -1;
 
 				// Draw node
-				ctx.fillStyle = 'rgba(62, 207, 142, 0.3)';
+				ctx.fillStyle = primaryColorFaint;
 				ctx.beginPath();
 				ctx.arc(node.x, node.y, 2, 0, Math.PI * 2);
 				ctx.fill();
@@ -71,7 +79,7 @@ export function AnimatedBackground() {
 
 					if (distance < maxDistance) {
 						const opacity = (1 - distance / maxDistance) * 0.6;
-						ctx.strokeStyle = `rgba(62, 207, 142, ${opacity})`;
+						ctx.strokeStyle = `hsl(${primaryHsl} / ${opacity})`;
 						ctx.lineWidth = 1;
 						ctx.beginPath();
 						ctx.moveTo(nodes[i].x, nodes[i].y);
@@ -81,13 +89,14 @@ export function AnimatedBackground() {
 				}
 			}
 
-			requestAnimationFrame(animate);
+			rafId = requestAnimationFrame(animate);
 		};
 
 		animate();
 
 		return () => {
 			window.removeEventListener('resize', resizeCanvas);
+			cancelAnimationFrame(rafId);
 		};
 	}, []);
 
