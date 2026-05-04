@@ -4,71 +4,64 @@ description: "An exploration of the tools and patterns reshaping platform engine
 date: "2025-10-30"
 ---
 
-A common theme in platform engineering is "operational gravity" - the force that keeps infrastructure teams stuck in a cycle of manual toil and maintenance. When a team is buried under the weight of supporting legacy systems, finding the capacity to innovate becomes a significant challenge. However, if the root problem is the sheer volume of low-level infrastructure requiring manual management, the solution likely lies in better abstraction.
+Provisioning a cache at Zalando requires navigating a 200+ line CloudFormation template. For engineers who do this once a week, fine. For engineers who do it once a quarter, it means reading provider documentation, copying templates they don't fully understand, and hoping the network and security parameters are right.
 
-At the current scale of operation, provisioning a simple cache or a database often requires a developer to navigate a 200+ line CloudFormation template or complex Kubernetes YAML. This direct exposure to the internal mechanics of the cloud provider creates a massive cognitive load. In many cases, this leads to "copy-paste engineering," where templates are repurposed without a full understanding of the underlying networking or security parameters. This lack of visibility inevitably leads to configuration drift and misconfigurations - the primary drivers of production incidents.
+When they're not, you get configuration drift. When you get enough configuration drift, you get production incidents. Most of the misconfigurations I've seen weren't caused by people being careless — they were caused by the gap between what IaC requires you to specify and what developers actually need to express.
 
-## Shifting from How to What
+The gap is: traditional IaC tells you *how* to build something. Most developers just want to say *what* they need.
 
-The fundamental issue is that traditional Infrastructure as Code (IaC) is often too imperative. It requires telling the cloud provider *how* to build something \- "create this subnet, then this security group, then this instance" \- rather than declaring *what* is actually needed.
+## The control plane approach
 
-To bridge this gap, a Control Plane approach is being proposed. In this model, the platform provides a high-level API that accepts "Intent." Instead of managing individual resources, developers submit a single manifest that describes a logical service. The control plane then takes on the responsibility of orchestration, ensuring that the actual state of the cloud matches the desired intent.
+The direction we're exploring is a control plane that accepts intent rather than instructions. A developer submits a manifest that says "I need a cache, medium size, one replica" — and the platform handles the rest. The ElastiCache cluster, the IAM policies, the VPC configuration, the security groups. All of it.
 
-This shift targets two critical benefits. First, it dramatically increases velocity—engineers currently spend significant time poring over provider-specific documentation instead of writing business logic. By focusing on intent, the time-to-market for a new feature is no longer throttled by the complexity of the infrastructure required to support it. The focus shifts from VPC peering to service connectivity. Second, it enables proactive security. An intent-based model moves away from "detective" controls—scanners that find mistakes after they are deployed. Instead, the abstraction itself acts as a guardrail. If the abstraction only allows for encrypted, private databases, it becomes structurally impossible to accidentally create an insecure one.
+Two things this buys you. First, speed. The time developers spend reading CloudFormation docs and debugging VPC peering is time not spent on the actual service. Second, security by default. If the abstraction only allows encrypted, private databases, you can't accidentally create an insecure one. You move from detective controls (scanners that find mistakes after deployment) to structural controls.
 
-## Exploring the Orchestration Landscape
+## What we evaluated
 
-There are several ways to implement this control plane logic, and the ecosystem is evolving rapidly. A few distinct options are currently under evaluation:
+A few options are on the table:
 
-- **Custom Controllers**: Building bespoke operators in Go or Python to wrap cloud APIs. While powerful, this requires significant long-term maintenance effort from the platform team.
-- **Kro**: An emerging project that simplifies the creation of custom resource definitions (CRDs) and controllers within Kubernetes, aiming to reduce the boilerplate of traditional operator development.
-- **Radius**: An open-source project that defines a "graph" of application components and their relationships, attempting to abstract the underlying infrastructure provider entirely.
-- **Crossplane**: A mature, CNCF-incubated project that extends the Kubernetes API to manage external resources.
+**Custom controllers** — operators written in Go or Python that wrap cloud APIs. Powerful, but the platform team owns the maintenance indefinitely. For a team already under operational pressure, that's a real cost.
 
-## Learnings from the Crossplane Prototype
+**Kro** — a newer project that simplifies creating CRDs and controllers inside Kubernetes. Less powerful than Crossplane today, especially for complex multi-cloud resource graphs, but it's now available as a managed capability on EKS. That changes the trade-off significantly. Managed means we don't operate a control plane for our control plane.
 
-While several options remain on the table, the primary focus of current experimentation is Crossplane. Its maturity and its "Kubernetes-native" philosophy align well with the existing infrastructure stack.
+**Radius** — defines application components and their relationships as a graph, abstracting away the provider. Interesting model, still evolving.
 
-The current prototype utilizes Compositions. Instead of writing low-level cloud resources, developers interact with a custom-defined resource, such as a Cache or a Database.
+**Crossplane** — CNCF-incubated, Kubernetes-native, mature. This is where most of our current work is focused.
 
-A typical manifest in this model looks like this:
+## What we learned from the Crossplane prototype
 
-apiVersion: platform.example.org/v1alpha1   
-kind: Cache   
-metadata:   
-  name: my-app-cache   
-spec:   
-  parameters:   
-    size: medium  
-    replicas: 1   
-    authTokenSecretRef: my-auth-token-secret 
+The core primitive in Crossplane is a Composition. Instead of writing CloudFormation, developers interact with a custom resource:
 
-Behind the scenes, the control plane takes this simple intent and orchestrates the creation of the ElastiCache cluster, the IAM policies, the network plumbing, and the security guardrails \- all following a predefined "Golden Path."
+```yaml
+apiVersion: platform.example.org/v1alpha1
+kind: Cache
+metadata:
+  name: my-app-cache
+spec:
+  parameters:
+    size: medium
+    replicas: 1
+    authTokenSecretRef: my-auth-token-secret
+```
 
-### Observations from Initial Testing
+The control plane turns that into an ElastiCache cluster, IAM policies, network config, and security guardrails — all following a predefined golden path. The developer doesn't see any of it unless something goes wrong.
 
-Unlike a standard CI/CD pipeline that runs once and stops, this approach utilizes a continuous control loop for drift detection and reconciliation. Testing shows that if a setting is changed manually in the cloud console, the platform detects the discrepancy and self-heals the resource back to the desired state defined in Git.
+A few things stood out from testing:
 
-The use of Composite Resource Definitions (XRDs) allows the platform to hide the complexity of the underlying provider. Multiple resources—the database, subnet groups, parameter groups, and IAM roles—are bundled into a single logical unit that is versioned and managed as one. Because these abstractions are standard Kubernetes objects, they integrate seamlessly with the internal developer portal. Infrastructure is treated exactly like a microservice, with the same RBAC, auditing, and tooling.
+Drift detection is continuous, not point-in-time. If someone manually changes a setting in the AWS console, Crossplane detects the discrepancy and reconciles back to the declared state. This is meaningfully different from a CI/CD pipeline that runs once and stops.
 
-## The Managed Appeal of Kro
+The abstractions are standard Kubernetes objects. That means they get the same RBAC, auditing, and portal integration as everything else. Infrastructure is treated like a microservice.
 
-While the focus remains on the Crossplane experiment due to its advanced composition features, other tools in the landscape are becoming impossible to ignore. Kro is a particularly interesting example. While it is currently not nearly as "powerful" as a solution like Crossplane \- particularly in its ability to model complex, multi-cloud resource environments out of the box \- it has become very appealing recently.
+XRDs let you bundle multiple resources into a single versioned unit. The database, subnet groups, parameter groups, and IAM roles are one logical thing from the developer's perspective.
 
-The fact that Kro is now provided as a managed capability within EKS significantly changes the trade-off. For a platform team, the reduction in operational overhead that comes with a managed service is a massive advantage. It allows the team to focus on defining the abstractions themselves rather than maintaining the health and scaling of the control plane infrastructure.
+## The flexibility problem
 
-## The Struggle of Flexibility versus Simplicity
+Good abstractions are hard to get right. If the abstraction is too simple, it can't handle the 10% of use cases that need specific tuning. If it's too powerful, you've just recreated the cloud provider API with extra steps.
 
-A recurring lesson from this project is that "good abstractions are hard." This is the classic leaky abstraction problem. If an abstraction is too simple, it cannot support the 10% of use cases that require specific performance tuning. If it is too powerful, it becomes just as complex as the cloud provider’s native API.
+Our working approach: convention over configuration. For the 90% case, the high-level object provides sensible defaults and just works. For the 10% who need more control, there are escape hatches — advanced parameter blocks that expose specific settings. We've accepted that a small number of hyper-bespoke systems will still need lower-level tools. The goal isn't to serve every possible case; it's to make common cases 10x easier for the majority.
 
-The proposed strategy follows a Convention over Configuration approach. For the 90% case, the high-level Cache object provides a "sane" environment that works out of the box with sensible defaults—this is the intended "Golden Path" for the majority of workloads. For the remaining 10% of power users who need more control, "escape hatches" or advanced parameter blocks are provided. While it's accepted that some hyper-bespoke systems may still require lower-level tools, the primary goal is making common tasks 10x easier for the majority.
+## Where this is going
 
-## A Vision for Application-Centric Abstractions
+This is the first step toward something broader: a single application manifest where infrastructure and code are defined together. You describe what your application is, and attach traits to it — autoscaling, storage, caching. The infrastructure follows from the declaration, not the other way around.
 
-This experiment represents the first step toward a broader goal: an Application-Centric manifest where infrastructure and code are inextricably linked.
-
-The vision is to move away from thinking about individual deployments, services, databases, and caches. Instead, the application is defined as a single unit. This aligns with models like the Open Application Model (OAM), where a component (the code) is defined and then "traits" (such as autoscaling or storage) are attached.
-
-## Closing Thoughts
-
-By abstracting the "how" and focusing on the "what," the goal is not just to increase developer speed, but to make the entire platform more resilient. It is a significant transition from the current state of infrastructure management to a unified orchestration layer, but initial experiments suggest this is the most viable path to bridging the abstraction gap.
+That's the direction. Getting there requires getting the abstraction layer right first, and that's what the Crossplane work is validating.

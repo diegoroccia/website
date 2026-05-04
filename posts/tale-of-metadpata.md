@@ -4,18 +4,30 @@ description: "Lessons learned from a critical incident at Zalando caused by a si
 date: "2024-01-23"
 ---
 
-I contributed to a post on the Zalando Engineering blog about a memorable incident that taught us valuable lessons about building safety mechanisms into our infrastructure automation tools.
+I contributed to a post on the Zalando Engineering blog about an incident that's hard to forget.
 
-## The Incident
+A single character typo — "metadata" becoming "metadpata" in a configuration file — caused our automation to interpret a config as "delete everything," removing DNS entries across our AWS infrastructure. One character. Significant blast radius.
 
-A single character typo - changing "metadata" to "metadpata" in a configuration file - caused our automated systems to interpret it as "delete all accounts," removing DNS entries across our AWS infrastructure. One character. Massive impact.
+## What the incident actually revealed
 
-## What We Learned
+The bug itself wasn't the interesting part. Typos happen. What was interesting was that our tooling had no layer between "someone made an edit" and "the change runs at scale across production." For everyday tooling that's fine. For automation that manages infrastructure across hundreds of AWS accounts, it's not.
 
-The incident highlighted that "supertools"—large-scale automation scripts that manage infrastructure at scale—need more than just standard code review processes. They require layered safety mechanisms. We implemented schema validation with jsonschema and pre-commit hooks to catch configuration errors before they reach production. Change previews using AWS CloudFormation ChangeSet now show human-readable diffs in pull requests, giving reviewers clear visibility into what will change. Phased rollouts limit blast radius and catch issues early, while "scream tests" introduce a one-week simulated deletion period before permanent resource removal, giving teams time to catch mistakes.
+We called these "supertools" internally — scripts and pipelines that have the authority to touch a large number of resources in one operation. The more powerful the tool, the more the cost of a mistake scales with it. Standard code review processes aren't designed for that.
 
-## The Bigger Picture
+## What we changed
 
-This incident reinforced a critical lesson in platform engineering: the more powerful your automation tools, the more important it becomes to build in guardrails. When a tool can manage infrastructure at scale, even small mistakes can have catastrophic consequences.
+A few things came out of the post-mortem:
 
-Read the full story with technical details on the [Zalando Engineering Blog](https://engineering.zalando.com/posts/2024/01/tale-of-metadpata-the-revenge-of-the-supertools.html).
+Schema validation with jsonschema and pre-commit hooks. Configuration errors now get caught before the PR is even opened, let alone merged.
+
+CloudFormation ChangeSets for previewing changes. Before anything runs, reviewers see a human-readable diff of what's about to happen. "Delete 47 DNS records" is harder to miss than a YAML diff.
+
+Phased rollouts. Changes don't apply everywhere at once. Early failures stay contained.
+
+Scream tests before deletion. Resources that are candidates for removal get flagged and left alone for a week before anything is actually deleted. This catches the case where something looked unused but wasn't.
+
+## The bigger point
+
+The more powerful your automation, the more you need to build constraints into it. Not process constraints — structural ones. A change preview that shows you what's about to happen is more reliable than a checklist item that says "review the changes carefully."
+
+The full write-up with technical details is on the [Zalando Engineering Blog](https://engineering.zalando.com/posts/2024/01/tale-of-metadpata-the-revenge-of-the-supertools.html).

@@ -4,55 +4,19 @@ description: "How we automated our GitHub support tracker with n8n, Claude AI, a
 date: "2026-11-27"
 ---
 
-Support tickets are the heartbeat of any engineering organization. They reveal recurring issues, knowledge gaps, and opportunities for improvement. But they also represent a significant operational burden—triaging, routing, resolving, and documenting solutions across hundreds or thousands of tickets.
+Our team handles platform and infrastructure support through a GitHub repository. For a while, support was purely reactive: an issue arrives, someone reads it, figures out who should own it, and eventually resolves it. The resolution stays buried in the ticket. Three months later, someone opens an almost identical issue.
 
-What if your support system could learn from every resolved ticket and automatically suggest solutions to new issues? That's exactly what we built using n8n, Claude AI, and vector embeddings.
+This is a solvable problem if you treat every resolved ticket as training data.
 
-## The Problem
+## What we built
 
-Our team manages infrastructure and platform support through a centralized GitHub repository. We were facing several interconnected challenges. Every new issue required manual triage—someone had to read it, understand the context, and assign it to the right team. Once an issue was resolved, the solution often stayed buried in that specific ticket thread, leading to lost knowledge. Users kept opening tickets for problems we'd already solved, and our support engineers spent hours searching through old tickets to find similar issues.
+Two n8n workflows that work together:
 
-We needed a system that could automatically learn from resolved tickets and provide instant, context-aware assistance for new ones.
+The first watches the GitHub repository and handles issues throughout their lifecycle. When a new issue is opened, it searches a vector knowledge base for similar past issues, generates a suggested solution using Claude, routes to the right team based on content analysis, and posts a summary to Google Chat for human review before anything is posted publicly. When an issue is closed, it reads the entire thread, extracts the actual working solution (ignoring the failed attempts), generates structured embeddings, and stores everything in PostgreSQL with PGVector.
 
-## The Solution: A Two-Part Automation System
+The second workflow is a Google Chat bot with a few commands. `/suggest` takes the current thread context, searches the knowledge base semantically, and replies with relevant past solutions. `/save` lets engineers manually add solutions — useful for tribal knowledge that never made it into a ticket. `/troubleshoot <app_name>` connects to our observability platform via MCP and does a tiered diagnostic: synthetic metrics first (fast, pre-aggregated), then raw spans only if errors are detected.
 
-We built two interconnected n8n workflows that work together to create a self-learning support system:
-
-### 1. GitHub Issue Automation Workflow
-
-This workflow monitors our GitHub support repository and handles issues throughout their lifecycle:
-
-**When a new issue is opened:**
-1. **AI Analysis**: Claude 3.5 Sonnet analyzes the issue content
-2. **Knowledge Base Search**: Uses vector similarity search to find related past issues
-3. **Solution Suggestion**: Generates a suggested solution based on historical resolutions
-4. **Team Assignment**: Automatically determines which team should own the issue based on content analysis
-5. **Human Approval**: Posts to Google Chat for team review before taking action
-6. **GitHub Comment**: Adds an AI-generated comment with the suggested solution and similar past issues
-
-**When an issue is closed:**
-1. **Thread Analysis**: Reads the entire issue thread including all comments
-2. **Solution Extraction**: Identifies the actual working solution (ignoring failed attempts)
-3. **Structured Summarization**: Creates a knowledge base entry with:
-   - Problem statement
-   - Root cause analysis
-   - Step-by-step solution
-   - Error messages and logs
-   - Owning team
-4. **Vector Embedding**: Converts the summary to embeddings using AWS Bedrock Titan
-5. **Knowledge Storage**: Saves to PostgreSQL with PGVector for semantic search
-
-### 2. Google Chat Bot Workflow
-
-This workflow provides our team with instant access to the knowledge base through conversational commands:
-
-The **`/suggest`** command reads the entire chat thread context, queries the knowledge base for similar issues, and suggests solutions with references to past tickets—all within the same thread. The **`/save`** command allows manual addition of solutions to the knowledge base, which is particularly useful for documenting tribal knowledge.
-
-The **`/troubleshoot <application_name>`** command integrates with our observability platform via MCP protocol to perform real-time diagnostics. It checks synthetic metrics for the last 5 minutes, identifies error spikes and latency issues, extracts the 5 most recent error spans, and synthesizes a root cause analysis. The entire flow is optimized for speed with targeted queries and small time windows.
-
-## Technical Architecture
-
-### System Overview
+## Architecture
 
 ```mermaid
 graph TB
@@ -80,25 +44,13 @@ graph TB
     style PGVector fill:#336791
 ```
 
-### AI Layer
+The AI layer uses Claude 3.5 Sonnet via AWS Bedrock for reasoning and Amazon Titan Embed v2 for vector representations. All knowledge base entries use JSON schema validation for structured output — early versions used free-form responses and were inconsistent enough to be useless for search.
 
-The AI layer uses Claude 3.5 Sonnet via AWS Bedrock for reasoning and synthesis, while Amazon Titan Embed v2 handles vector representations. JSON schema validation ensures consistent knowledge base entries through structured output.
+PostgreSQL with PGVector handles cosine similarity search. Each stored vector includes the issue number, URL, solution, owning team, and root cause analysis as metadata. The metadata matters more than it sounds — it enables filtering by team, by error type, by recurrence.
 
-### Data Layer
+## The flows
 
-PostgreSQL with the PGVector extension serves as our vector database, enabling cosine similarity search with top-K retrieval. Each vector stores comprehensive metadata including issue number, URL, solution, owning team, and root cause analysis.
-
-### Integration Layer
-
-The GitHub API provides webhooks for issue events and REST API access for comments and labels. Google Chat API handles webhook triggers and message posting, while our observability platform connects via Model Context Protocol for metrics and traces.
-
-### Orchestration
-
-n8n provides the visual workflow automation that connects all components. Switch nodes route different issue actions based on conditional logic, and approval gates enable human-in-the-loop oversight for AI-generated content.
-
-## Workflow Diagrams
-
-### New Issue Flow: AI-Powered Triage
+### New issue triage
 
 ```mermaid
 sequenceDiagram
@@ -122,7 +74,7 @@ sequenceDiagram
     GitHub-->>User: Notification
 ```
 
-### Closed Issue Flow: Knowledge Capture
+### Knowledge capture on close
 
 ```mermaid
 sequenceDiagram
@@ -147,7 +99,7 @@ sequenceDiagram
     KB-->>n8n: Confirmation
 ```
 
-### Chat Bot Flow: Instant Support
+### Chat bot
 
 ```mermaid
 sequenceDiagram
@@ -169,53 +121,11 @@ sequenceDiagram
     GChat-->>User: Instant answer
 ```
 
-## Key Features
+## The prompts
 
-### 1. Intelligent Team Routing
+Most of the quality of this system comes from the prompt engineering. The full prompts are worth sharing:
 
-The AI analyzes issue content and maps it to the appropriate engineering team based on the domain (infrastructure, platform, databases, networking, developer tools, etc.). It uses both label analysis and content understanding, so even unlabeled issues get routed correctly.
-
-### 2. Solution Quality Control
-
-The AI is trained to extract only the **final working solution**, ignoring all the trial-and-error that happened along the way. It looks for "turning point" comments where the user confirms the fix worked.
-
-### 3. Precision Over Recall
-
-When suggesting solutions, we prioritize accuracy over completeness. The prompt instructs the AI to include exact error codes and CLI commands, avoid empathetic filler in favor of pure technical solutions, and only mention approaches that actually worked. If no solution is found, the system explicitly says so rather than hallucinating an answer.
-
-### 4. Speed-Optimized Troubleshooting
-
-The `/troubleshoot` command uses a tiered retrieval strategy that dramatically reduces latency. It starts with synthetic metrics (pre-aggregated data) and only fetches raw spans if errors are detected. By limiting time windows to reduce data volume and requesting only specific attributes needed for diagnosis, we've reduced troubleshooting latency from minutes to seconds.
-
-## Real-World Impact
-
-After deploying this system, we've seen transformative results. Triage time has dropped by 60%, as the AI handles initial classification and routing. Common problems that previously required engineer time now receive instant answers. The knowledge base preserves expertise that survives team turnover, and its accuracy continues to improve as it learns from each new resolution.
-
-Perhaps most valuable is what the system has revealed about our infrastructure. By clustering similar issues, it's surfaced patterns we didn't know existed—recurring problems that pointed to underlying infrastructure issues we could fix proactively rather than reactively.
-
-## Lessons Learned
-
-### 1. Structured Output is Critical
-
-Early versions used free-form AI responses, which were inconsistent and hard to search. Switching to JSON schema validation with structured output parsers made the knowledge base much more reliable.
-
-### 2. Human Approval Prevents Mistakes
-
-We initially tried fully automated responses, but found edge cases where the AI suggested incorrect solutions. Adding a Google Chat approval gate lets our team catch errors before they reach users.
-
-### 3. Metadata Matters
-
-Storing rich metadata (team, error messages, solution type) alongside vectors enables powerful filtering and analytics. We can now track which teams have the most recurring issues.
-
-### 4. Start Small with Time Windows
-
-Our first troubleshooting queries searched days of data and timed out. Narrowing to minutes made queries fast and still caught 95% of real-time issues.
-
-## The Prompts: Prompt Engineering in Action
-
-The quality of this system comes down to carefully crafted prompts. Here are the actual prompts we use:
-
-### Prompt 1: Knowledge Base Extraction (for closed issues)
+### Knowledge base extraction (closed issues)
 
 ```
 You are a Principal Site Reliability Engineer (SRE) creating a "Knowledge Base"
@@ -251,7 +161,7 @@ Extract these technical details into the JSON structure provided:
 - owning_team: The team responsible based on content analysis
 ```
 
-### Prompt 2: Solution Suggestion (for new issues)
+### Solution suggestion (new issues)
 
 ```
 You are a Senior Site Reliability Engineer (SRE) acting as a Tier 2 Support
@@ -289,7 +199,7 @@ the solution to "No recorded solution found in the Knowledge Base. Please
 escalate to the relevant domain team." and set the owning_team to "Unknown".
 ```
 
-### Prompt 3: Real-Time Troubleshooting
+### Real-time troubleshooting
 
 ```
 ### High-Speed Troubleshooting Specialist
@@ -332,61 +242,16 @@ Use a small time window, e.g., the last hour.
 - **Payload Limit:** Limit tool output to the top 10 results.
 ```
 
-These prompts demonstrate several key techniques:
-- **Role Assignment**: Giving the AI a specific persona (Principal SRE, Tier 2 Support)
-- **Clear Constraints**: Explicit rules about what to include/exclude
-- **Output Structure**: Defining exactly what format is expected
-- **Performance Optimization**: Specifying time windows and data limits
-- **Failure Handling**: What to do when no solution is found
+A few principles that made the prompts work: giving the AI a specific role, explicit rules about what to exclude (failed attempts, empathetic filler), structured output format, and clear failure handling. The "No Fluff" rule in particular made a significant difference to output quality.
 
-## Code Highlights
+## What actually changed
 
-Here's how we extract the owning team using structured output:
+Triage time is down roughly 60%. Common issues now get answered without involving an engineer. The knowledge base has started surfacing patterns — clusters of similar issues that pointed to underlying infrastructure problems we were treating as one-offs. That last part was the most useful thing the system revealed.
 
-```typescript
-{
-  "type": "object",
-  "properties": {
-    "owning_team": {
-      "type": "string",
-      "enum": [
-        "Infrastructure Team",
-        "Platform Team",
-        "Database Team",
-        "Networking Team",
-        "Developer Tools Team",
-        "Security Team",
-        "Observability Team",
-        "Unknown"
-      ]
-    }
-  },
-  "required": ["owning_team"]
-}
-```
+The whole thing runs on infrastructure we already had: AWS Bedrock, PostgreSQL, GitHub, Google Chat. No custom application code. n8n handles the orchestration with visual workflows that were easy to iterate on as we learned what worked.
 
-And here's the prompt that ensures we only extract working solutions:
+One thing we'd do differently: we initially tried fully automated responses without a human approval step. The approval gate in Google Chat was not bureaucracy — it caught real mistakes early enough that they didn't matter.
 
-```
-### STRICT ANALYSIS RULES:
-1. Prioritize Code & Logs: Preserve specific error codes
-2. Find the "Turning Point": Look for confirmation comments
-3. Ignore Abandoned Paths: Only report the final working solution
-```
+## What's next
 
-## Future Enhancements
-
-We're planning to add:
-
-- **Proactive Issue Detection**: Monitor metrics and create issues automatically when anomalies are detected
-- **Solution Validation**: Track if suggested solutions actually resolved the issue
-- **Multi-Repo Support**: Extend beyond our main support tracker
-- **Slack Integration**: Bring the bot to where more teams already collaborate
-
-## Conclusion
-
-Building a self-learning support system isn't just about automation—it's about creating institutional memory that grows smarter over time. By combining n8n's visual workflow flexibility with Claude's reasoning capabilities and vector search's semantic understanding, we've transformed our support process from reactive and manual to proactive and intelligent.
-
-The best part? This entire system runs on infrastructure we already had (AWS Bedrock, PostgreSQL) and required no custom application code. n8n's visual workflow builder made it easy to iterate and experiment until we found the right architecture.
-
-If you're drowning in support tickets, consider this: every resolved ticket is training data for your next automation. The question isn't whether to build a system like this—it's how soon you can start learning from your own solutions.
+A few things we're planning to add: proactive issue detection from metrics (create a ticket when an anomaly is detected, before anyone opens one manually), solution validation to track whether suggested resolutions actually worked, and multi-repo support. The current system only covers our main support tracker.
