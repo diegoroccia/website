@@ -20,11 +20,6 @@ Every commit runs **two things in order**:
 
 A type error **anywhere** in the project blocks the commit, even if you only changed a markdown post.
 
-## Key stale facts in CLAUDE.md (do not trust)
-
-- CLAUDE.md says "Next.js 15" — actual installed version is `next@16.x`
-- CLAUDE.md says `getAllPosts()` is in `app/lib/utils.ts` — it is actually in `app/lib/posts.ts`. `utils.ts` only exports `cn()`.
-
 ## Path alias
 
 `@/` → `./app/`  (not the project root)
@@ -65,3 +60,6 @@ Jobs in order: `check` (lint + typecheck) → `build` (static export) → `deplo
 - `pages/` directory exists but is empty — ignore it
 - `eslint.config.mjs` uses the native flat config from `eslint-config-next` directly (no `FlatCompat` shim)
 - Tailwind v4: no `tailwind.config.js` — all theme config lives in `app/globals.css` (`@theme` block). PostCSS uses `@tailwindcss/postcss`. Animations via `tw-animate-css` (imported in `globals.css`).
+- `README.md` is unmodified `create-next-app` boilerplate — it does not describe this project. Don't use it as a source of truth for architecture or setup.
+- No test suite exists. There is no `npm test` script; `devbox.json`'s `test` script is just a placeholder that always fails.
+- `applications.json` at the repo root (~14MB, untracked) is a stray file unrelated to the blog — don't read/grep it (context-expensive) and don't commit it.
