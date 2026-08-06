@@ -14,7 +14,7 @@ export default function BlogPage() {
     <div className="container mx-auto max-w-6xl py-20 px-4">
       <div className="space-y-12">
         <header className="space-y-4">
-          <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl">
+          <h1 className="text-4xl font-mono font-extrabold tracking-tight text-foreground sm:text-5xl">
             Blog Posts
           </h1>
           <p className="text-xl text-muted-foreground">

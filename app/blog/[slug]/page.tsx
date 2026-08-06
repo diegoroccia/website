@@ -49,11 +49,11 @@ export default async function Page({
   return (
     <article className="mx-auto py-20 px-8 md:px-16 lg:px-32">
       <header className="mb-12 space-y-4">
-        <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl text-foreground">
+        <h1 className="text-4xl font-mono font-extrabold tracking-tight sm:text-5xl text-foreground">
           {post.title}
         </h1>
-        <p className="text-muted-foreground">
-          Published on {post.date} • {post.readingTime} read
+        <p className="text-muted-foreground font-mono text-sm">
+          Published on {post.date} • [ {post.readingTime} read ]
         </p>
       </header>
       <div

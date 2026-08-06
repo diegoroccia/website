@@ -13,7 +13,7 @@ export default function About() {
     <div className="container mx-auto max-w-3xl px-4 py-20 space-y-12">
       {/* Hero Section */}
       <section className="space-y-4 text-center">
-        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-foreground">
+        <h1 className="text-4xl sm:text-5xl font-mono font-extrabold tracking-tight text-foreground">
           <span className="text-primary">Resume</span>
         </h1>
         <p className="text-xl text-muted-foreground">

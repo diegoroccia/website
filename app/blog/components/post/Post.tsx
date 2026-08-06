@@ -18,7 +18,7 @@ export default function BlogPostTeaser({
 }: BlogPostTeaserProps) {
   return (
     <article className="group relative flex flex-col items-start p-6 rounded-2xl border border-border bg-card transition-colors hover:border-primary/50">
-      <h2 className="text-xl font-bold tracking-tight text-foreground">
+      <h2 className="text-xl font-mono font-bold tracking-tight text-foreground">
         <Link href={`/blog/${slug}`}>
           <span className="absolute inset-0 rounded-2xl" />
           {title}
@@ -27,10 +27,10 @@ export default function BlogPostTeaser({
       <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
         {description}
       </p>
-      <div className="mt-6 flex items-center gap-4 text-xs font-medium text-muted-foreground">
+      <div className="mt-6 flex items-center gap-4 text-xs font-mono font-medium text-muted-foreground">
         <time>{date}</time>
         <span className="h-1 w-1 rounded-full bg-border" />
-        <span>{readingTime} read</span>
+        <span>[ {readingTime} read ]</span>
       </div>
       <div className="mt-4 flex items-center text-xs font-bold text-primary group-hover:underline">
         Read more <ArrowRight className="ml-1 h-3 w-3" />

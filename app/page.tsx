@@ -17,8 +17,8 @@ export default function Home() {
               priority
             />
           </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-foreground animate-in fade-in duration-500">
-            Hi, I&apos;m <span className="text-primary">Diego Roccia</span>.
+          <h1 className="text-3xl sm:text-5xl font-mono font-extrabold tracking-tight text-foreground animate-in fade-in duration-500">
+            Hi, I&apos;m <span className="text-primary">Diego Roccia</span>.<span className="cursor-blink text-primary">▋</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-[600px] mx-auto animate-in fade-in duration-500">
             Building things, learning constantly, loving the journey.
